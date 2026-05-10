@@ -1,4 +1,8 @@
--- Using the Products and OrderItems tables, write a query to find the total revenue generated for
--- each product. The result should display the ProductID, ProductName, and the TotalRevenue
--- (calculated as the sum of Price * Quantity for each OrderItem entry for the product).
--- Order the results by ProductID in ascending order.
+SELECT
+    Products.ProductID,
+    Products.ProductName,
+    SUM(OrderItems.Price * OrderItems.Quantity) AS TotalRevenue
+FROM Products
+INNER JOIN OrderItems ON Products.ProductID = OrderItems.ProductID
+GROUP BY Products.ProductID, Products.ProductName
+ORDER BY Products.ProductID ASC;
