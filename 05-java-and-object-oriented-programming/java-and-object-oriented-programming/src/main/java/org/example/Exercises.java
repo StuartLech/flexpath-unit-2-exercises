@@ -60,7 +60,7 @@ public class Exercises {
         String result = "";
         String prompt = "Do you want to continue?";
         String userInput = "Yes";
-        if ("Yes".equals(userInput))){
+        if ("Yes".equals(userInput)) {
             result = "The program will continue";
         }
         else{

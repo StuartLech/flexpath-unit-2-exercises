@@ -4,8 +4,50 @@ package org.example.Models;
  * A to-do list item.
  */
 public class ToDoListItem {
-    // TODO: Add fields for the to-do list.
-    // TODO: Add getters and setters for the fields.
-    // TODO: Add a constructor that initializes the fields.
-    // TODO: Add an empty constructor.
+    private int id;
+    private String text;
+    private int todoListId;
+    private boolean completed;
+
+    public ToDoListItem() {
+    }
+
+    public ToDoListItem(int id, String text, int todoListId, boolean completed) {
+        this.id = id;
+        this.text = text;
+        this.todoListId = todoListId;
+        this.completed = completed;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public int getTodoListId() {
+        return todoListId;
+    }
+
+    public void setTodoListId(int todoListId) {
+        this.todoListId = todoListId;
+    }
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
 }

@@ -1,13 +1,11 @@
 package org.example.Controllers;
+
 import org.example.Models.ToDoListItem;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.sql.DataSource;
 import java.util.List;
-import java.util.ArrayList;
 
 /**
  * The controller for to-do list items.
@@ -17,67 +15,60 @@ import java.util.ArrayList;
 public class ToDoListItemController {
     private JdbcTemplate jdbcTemplate;
 
-    /**
-     * Creates a new to-do list item controller.
-     *
-     * @param dataSource The data source for the controller.  (Provided by Spring with the
-     *                   values from application.properties.)
-     */
     public ToDoListItemController(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    /**
-     * Gets all to-do list items.
-     *
-     * @return All to-do list items.
-     */
     @GetMapping
     public List<ToDoListItem> getToDoListItems() {
-        // TODO: Use the JDBC template to get all to-do list items from the database and map them to ToDoListItem objects.
-        return new ArrayList<>();
+        return jdbcTemplate.query(
+                "SELECT id, text, todo_list_id, completed FROM todo_list_items",
+                (rs, rowNum) -> new ToDoListItem(
+                        rs.getInt("id"),
+                        rs.getString("text"),
+                        rs.getInt("todo_list_id"),
+                        rs.getBoolean("completed")
+                )
+        );
     }
 
-    /**
-     * Gets a to-do list item by ID.
-     *
-     * @param id The ID of the to-do list item.
-     * @return The to-do list item with the given ID.
-     */
     @GetMapping("/{id}")
     public ToDoListItem getToDoListItem(@PathVariable int id) {
-        // TODO: Use the JDBC template to get the to-do list item with the given ID from the database and map it to a ToDoListItem object.
-        return new ToDoListItem();
+        return jdbcTemplate.queryForObject(
+                "SELECT id, text, todo_list_id, completed FROM todo_list_items WHERE id = ?",
+                (rs, rowNum) -> new ToDoListItem(
+                        rs.getInt("id"),
+                        rs.getString("text"),
+                        rs.getInt("todo_list_id"),
+                        rs.getBoolean("completed")
+                ),
+                id
+        );
     }
 
-    /**
-     * Creates a new to-do list item.
-     *
-     * @param toDoListItem The to-do list item to create.
-     */
     @PostMapping
     public void createToDoListItem(@RequestBody ToDoListItem toDoListItem) {
-        // TODO: Use the JDBC template to insert the to-do list item into the database.
+        jdbcTemplate.update(
+                "INSERT INTO todo_list_items (text, todo_list_id, completed) VALUES (?, ?, ?)",
+                toDoListItem.getText(),
+                toDoListItem.getTodoListId(),
+                toDoListItem.isCompleted()
+        );
     }
 
-    /**
-     * Updates a to-do list item.
-     *
-     * @param id The ID of the to-do list item.
-     * @param toDoListItem The updated to-do list item.
-     */
     @PostMapping("/{id}")
     public void updateToDoListItem(@PathVariable int id, @RequestBody ToDoListItem toDoListItem) {
-        // TODO: Use the JDBC template to update the to-do list item in the database.
+        jdbcTemplate.update(
+                "UPDATE todo_list_items SET text = ?, todo_list_id = ?, completed = ? WHERE id = ?",
+                toDoListItem.getText(),
+                toDoListItem.getTodoListId(),
+                toDoListItem.isCompleted(),
+                id
+        );
     }
 
-    /**
-     * Deletes a to-do list item.
-     *
-     * @param id The ID of the to-do list item.
-     */
     @PostMapping("/{id}/delete")
     public void deleteToDoListItem(@PathVariable int id) {
-        // TODO: Use the JDBC template to delete the to-do list item from the database.
+        jdbcTemplate.update("DELETE FROM todo_list_items WHERE id = ?", id);
     }
 }

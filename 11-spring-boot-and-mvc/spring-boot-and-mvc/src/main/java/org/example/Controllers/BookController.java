@@ -1,4 +1,5 @@
 package org.example.Controllers;
+
 import org.example.Models.Book;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,23 +16,36 @@ public class BookController {
             new Book(5, "The Color Purple", "Alice Walker", 1982)
     ));
 
+    @GetMapping
     public List<Book> getBooks() {
-        throw new UnsupportedOperationException("Not implemented yet");
+        return books;
     }
 
-    public Book getBookById(int id) {
-        throw new UnsupportedOperationException("Not implemented yet");
+    @GetMapping("/{id}")
+    public Book getBookById(@PathVariable int id) {
+        return books.stream()
+                .filter(book -> book.getId() == id)
+                .findFirst()
+                .orElse(null);
     }
 
-    public void addBook(Book book) {
-        throw new UnsupportedOperationException("Not implemented yet");
+    @PostMapping
+    public void addBook(@RequestBody Book book) {
+        books.add(book);
     }
 
-    public void updateBook(int id, Book book) {
-        throw new UnsupportedOperationException("Not implemented yet");
+    @PutMapping("/{id}")
+    public void updateBook(@PathVariable int id, @RequestBody Book book) {
+        for (int i = 0; i < books.size(); i++) {
+            if (books.get(i).getId() == id) {
+                books.set(i, book);
+                return;
+            }
+        }
     }
 
-    public void deleteBook(int id) {
-        throw new UnsupportedOperationException("Not implemented yet");
+    @DeleteMapping("/{id}")
+    public void deleteBook(@PathVariable int id) {
+        books.removeIf(book -> book.getId() == id);
     }
 }
